@@ -211,15 +211,19 @@
             const point = [Number(nudo.lat), Number(nudo.lng)]
             points.push(point)
 
-            L.circleMarker(point, {
-              radius: nudo.ar_node_id === node ? 13 : 8,
-              color: nudo.ar_node_id === node ? '#7ddcff' : '#ffffff',
-              fillColor: nudo.ar_node_id === node ? '#7ddcff' : '#ffffff',
-              fillOpacity: 0.45,
-              weight: 2,
-            })
-              .addTo(map)
-              .bindPopup(`Nudo ${nudo.ar_node_id}`)
+          const isCurrentNode = nudo.ar_node_id === node
+
+          L.circleMarker(point, {
+            radius: isCurrentNode ? 18 : 11,
+            color: isCurrentNode ? '#7ddcff' : '#ffffff',
+            fillColor: isCurrentNode ? '#7ddcff' : '#ffffff',
+            fillOpacity: isCurrentNode ? 0.35 : 0.22,
+            weight: 2,
+          }).addTo(map)
+
+          L.marker(point)
+            .addTo(map)
+            .bindPopup(`Nudo ${nudo.ar_node_id}`)
           })
 
           if (points.length > 1) {

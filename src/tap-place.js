@@ -49,8 +49,10 @@ export const tapPlaceComponent = {
       this.canPlaceModel = false
       this.nodeCount += 1
 
-      const infoText = document.getElementById('infoText')
-      infoText.style.display = 'block'
+      const promptText = document.getElementById('promptText')
+
+      promptText.innerHTML =
+      '👆👆 Doble tap sobre un nudo para abrir su memoria.'
 
       const nodeId = this.nodeCount
       const touchPoint = event.detail.intersection.point

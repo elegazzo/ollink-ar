@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OllinK</title>
+
+  <link rel="stylesheet" href="./assets/texto.css">
+
+  <link rel="stylesheet"href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>OllinK</h1>
+
+    <div id="nodeInfo" class="subtitle"></div>
+
+    <div id="firstNodeContent" class="section" style="display: none;">
+
+     <p class="small"> Archivo colectivo de eventos registrados en este territorio.</p>
+
+    <div class="carousel">
+
+  <div class="memory-card">
+    <img src="./assets/memorias/evento01.jpeg" alt="Carnaval 2026">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://www.facebook.com/share/r/1EJ9wvj1F2/?mibextid=wwXIfr" target="_blank">
+      Ver Reel
+    </a>
+  </div>
+
+  <div class="memory-card">
+    <img src="./assets/memorias/evento02.jpeg" alt="Dron vuelo Carnaval">
+    <h3>Memoria colectiva 02</h3>
+    <p>Video compartido por la comunidad.</p>
+    <a href="https://www.facebook.com/share/v/193w1CthJV/?mibextid=wwXIfr" target="_blank">
+      Ver TikTok
+    </a>
+  </div>
+
+
+  <div class="memory-card">
+    <img src="./assets/memorias/evento03.jpeg" alt="Region Huitzizilapan">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://www.facebook.com/share/r/1CiEStGirP/?mibextid=wwXIfr" target="_blank">
+      Ver Reel
+    </a>
+  </div>
+ 
+  <div class="memory-card">
+    <img src="./assets/memorias/evento04.jpeg" alt="¿Que es el Carnaval Huitzizilapan?">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://vt.tiktok.com/ZSCLRJyKD/" target="_blank">
+      Ver Reel
+    </a>
+  </div>
+  
+  <div class="memory-card">
+    <img src="./assets/memorias/evento05.jpeg" alt="Video desde Dron">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://www.facebook.com/share/v/1XiKWzBbjZ/?mibextid=wwXIfr" target="_blank">
+      Ver Reel
+    </a>
+  </div>  
+
+  <div class="memory-card">
+    <img src="./assets/memorias/evento06.jpeg" alt="Toro pirotecnico Apaches 2026">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://youtube.com/shorts/odj7-d3boL0?si=5Knir26T31-RzEF1" target="_blank">
+      Ver Reel
+    </a>
+  </div>
+  
+  <div class="memory-card">
+    <img src="./assets/memorias/evento07.jpeg" alt="Blog por @eltiosancrisof">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://youtube.com/shorts/axvb7S_zyRk?si=zyju2SKWbW5fONKO" target="_blank">
+      Ver Reel
+    </a>
+  </div>  
+
+   <div class="memory-card">
+    <img src="./assets/memorias/evento08.jpeg" alt="Carnval Iconico del Valle de Toluca">
+    <h3>Memoria colectiva 01</h3>
+    <p>Registro audiovisual ocurrido en este lugar.</p>
+    <a href="https://youtube.com/shorts/fIeOM1qL6k0?si=4TJtxrpWMzCkrshf" target="_blank">
+      Ver Reel
+    </a>
+   </div> 
+  </div>
+ </div>
+
+    <div class="map-section">
+    <h2>Ubicación del nudo</h2>
+    <p class="small">Punto geográfico donde fue colocado este nudo.</p>
+    <div id="nodeMap"></div>
+    </div> 
+
+    <div id="commentsList" class="section">
+    <h2>Memorias guardadas</h2>
+    <div id="commentsContainer"></div>
+    </div>
+    
+
+    <div id="commentSection" class="section">
+      <h2>Agregar comentario</h2>
+      <p class="small">Escribe una memoria, sensación o pensamiento asociado a este nudo.</p>
+
+      <textarea id="messageInput" placeholder="Escribe aquí..."></textarea>
+
+      <button id="saveBtn">Enviar mensaje</button>
+      <button class="ghost-button" onclick="window.location.href='./index.html'">
+        Volver a Camara
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const supabaseUrl = 'https://skeasmvvsuawewsiacdi.supabase.co'
+
+    const supabaseKey = 'sb_publishable_6MFibAKXqYUh-SlUCXV7eQ_BBLQVUbr'
+
+    const ollinkDB = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    )  
+
+  
+    const params = new URLSearchParams(window.location.search)
+
+    const node = params.get('node') || 'sin nodo'
+    const lat = params.get('lat')
+    const lng = params.get('lng')
+
+    const nodeInfo = document.getElementById('nodeInfo')
+    const firstNodeContent = document.getElementById('firstNodeContent')
+    const saveBtn = document.getElementById('saveBtn')
+    const messageInput = document.getElementById('messageInput')
+
+        async function saveNode() {
+      if (!lat || !lng) return
+
+      const { error } = await ollinkDB
+        .from('nodes')
+        .upsert([{
+          ar_node_id: node,
+          lat: Number(lat),
+          lng: Number(lng),
+        }], {
+          onConflict: 'ar_node_id',
+        })
+
+      if (error) {
+        console.error('Error al guardar nudo:', error)
+      }
+    }
+
+    saveNode()
+
+    nodeInfo.innerHTML = lat && lng
+      ? `Nudo ${node} · Lat ${Number(lat).toFixed(5)} · Lng ${Number(lng).toFixed(5)}`
+      : `Nudo ${node}`
+
+    if (node === '1') {
+      firstNodeContent.style.display = 'block'
+    }
+         let map
+
+        if (lat && lng) {
+          map = L.map('nodeMap').setView([Number(lat), Number(lng)], 17)
+
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CARTO',
+            maxZoom: 20,
+          }).addTo(map)
+
+          loadAllNodesOnMap()
+        }
+
+        async function loadAllNodesOnMap() {
+          const { data, error } = await ollinkDB
+            .from('nodes')
+            .select('*')
+            .order('created_at', { ascending: true })
+
+          if (error) {
+            console.error('Error al cargar nudos:', error)
+            return
+          }
+
+          const points = []
+
+          data.forEach((nudo) => {
+            if (!nudo.lat || !nudo.lng) return
+
+            const point = [Number(nudo.lat), Number(nudo.lng)]
+            points.push(point)
+
+            L.circleMarker(point, {
+              radius: nudo.ar_node_id === node ? 13 : 8,
+              color: nudo.ar_node_id === node ? '#7ddcff' : '#ffffff',
+              fillColor: nudo.ar_node_id === node ? '#7ddcff' : '#ffffff',
+              fillOpacity: 0.45,
+              weight: 2,
+            })
+              .addTo(map)
+              .bindPopup(`Nudo ${nudo.ar_node_id}`)
+          })
+
+          if (points.length > 1) {
+            L.polyline(points, {
+              color: '#7ddcff',
+              weight: 3,
+              opacity: 0.65,
+            }).addTo(map)
+          }
+        }
+        const commentsContainer = document.getElementById('commentsContainer')
+
+        async function loadComments() {
+          const { data, error } = await ollinkDB
+            .from('comments')
+            .select('*')
+            .eq('ar_node_id', node)
+            .order('created_at', { ascending: false })
+
+          if (error) {
+            console.error('Error al cargar comentarios:', error)
+            return
+          }
+
+          commentsContainer.innerHTML = ''
+
+          data.forEach((comment) => {
+            const card = document.createElement('div')
+            card.classList.add('card')
+
+            card.innerHTML = `
+              <p>${comment.message}</p>
+              <p class="small">${new Date(comment.created_at).toLocaleString()}</p>
+            `
+
+            commentsContainer.appendChild(card)
+          })
+        }
+
+        loadComments()
+
+
+        saveBtn.addEventListener('click', async () => {
+        const message = messageInput.value.trim()
+
+        if (!message) return
+
+        const data = {
+          ar_node_id: node,
+          lat: lat ? Number(lat) : null,
+          lng: lng ? Number(lng) : null,
+          message: message,
+        }
+
+        const { error } = await ollinkDB
+          .from('comments')
+          .insert([data])
+
+        if (error) {
+          console.error('Error al guardar:', error)
+          alert('No se pudo enviar el mensaje')
+          return
+        }
+
+        await loadComments()
+
+        messageInput.value = ''
+        alert('Mensaje enviado')
+      })
+  </script>
+</body>
+</html>

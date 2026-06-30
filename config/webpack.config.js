@@ -78,6 +78,14 @@ const config = {
     publicPath: '/',
   },
   plugins: [
+   
+    new HtmlWebpackPlugin({
+      template: path.join(srcPath, 'inicio.html'),
+      filename: 'inicio.html',
+      inject: false,
+    }),
+
+
     new HtmlWebpackPlugin({
       template: path.join(srcPath, 'index.html'),
       filename: 'index.html',

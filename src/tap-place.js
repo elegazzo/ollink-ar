@@ -51,7 +51,9 @@ export const tapPlaceComponent = {
     ground.addEventListener('click', (event) => {
       if (!this.canPlaceModel) return
 
-      this.prompt.style.display = 'none'
+      this.prompt.style.display = 'block'
+      this.prompt.innerHTML =
+        '👆👆 Doble tap sobre un nudo para abrir su memoria.'
       this.canPlaceModel = false
       let nodeId
 
@@ -61,11 +63,6 @@ export const tapPlaceComponent = {
         this.nodeCount += 1
         nodeId = this.nodeCount
       }
-
-      const promptText = document.getElementById('promptText')
-
-      promptText.innerHTML =
-      '👆👆 Doble tap sobre un nudo para abrir su memoria.'
 
       const touchPoint = event.detail.intersection.point
 

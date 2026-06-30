@@ -52,8 +52,7 @@ export const tapPlaceComponent = {
       if (!this.canPlaceModel) return
 
       this.prompt.style.display = 'block'
-      this.prompt.innerHTML =
-        '👆👆 Doble tap sobre un nudo para abrir su memoria.'
+      this.prompt.innerHTML ='👆👆 Doble tap sobre un nudo para abrir su memoria.'
       this.canPlaceModel = false
       let nodeId
 

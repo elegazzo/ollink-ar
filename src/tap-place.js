@@ -53,10 +53,12 @@ export const tapPlaceComponent = {
       this.prompt.style.cssText =
         'font-size:16px !important; display:block !important; position:static !important; transform:none !important; margin-top:6px;'
 
-      this.prompt.innerHTML =
-        '👆👆 Doble tap sobre un nudo para abrir su memoria.'
+      this.prompt.innerHTML ='👆👆 Doble tap sobre un nudo para abrir su memoria.'
             this.canPlaceModel = false
       let nodeId
+
+      this.prompt.classList.remove('prompt-big')
+      this.prompt.classList.add('prompt-small')
 
       if (this.mode === 'preset') {
         nodeId = 1

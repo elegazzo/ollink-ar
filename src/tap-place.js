@@ -7,10 +7,16 @@ export const tapPlaceComponent = {
   init() {
     const ground = document.getElementById('ground')
     const addModelBtn = document.getElementById('addModelBtn')
+    const urlParams = new URLSearchParams(window.location.search)
+
+    this.mode = urlParams.get('mode') || 'create'
+
+    this.presetLat = 19.39752
+    this.presetLng = -99.4667
 
     this.prompt = document.getElementById('promptText')
     this.canPlaceModel = true
-    this.nodeCount = 0
+    this.nodeCount =  1
     this.userLocation = null
 
     const THREE = AFRAME.THREE
@@ -47,14 +53,20 @@ export const tapPlaceComponent = {
 
       this.prompt.style.display = 'none'
       this.canPlaceModel = false
-      this.nodeCount += 1
+      let nodeId
+
+      if (this.mode === 'preset') {
+        nodeId = 1
+      } else {
+        this.nodeCount += 1
+        nodeId = this.nodeCount
+      }
 
       const promptText = document.getElementById('promptText')
 
       promptText.innerHTML =
       '👆👆 Doble tap sobre un nudo para abrir su memoria.'
 
-      const nodeId = this.nodeCount
       const touchPoint = event.detail.intersection.point
 
       
@@ -116,10 +128,21 @@ export const tapPlaceComponent = {
         const currentTime = Date.now()
 
         if (currentTime - lastTapTime < 350) {
-          const lat = this.userLocation ? this.userLocation.lat : ''
-          const lng = this.userLocation ? this.userLocation.lng : ''
+        const finalLat =
+          this.mode === 'preset'
+            ? this.presetLat
+            : this.userLocation
+              ? this.userLocation.lat
+              : ''
 
-          window.location.href = `./texto.html?node=${nodeId}&lat=${lat}&lng=${lng}`
+        const finalLng =
+          this.mode === 'preset'
+            ? this.presetLng
+            : this.userLocation
+              ? this.userLocation.lng
+              : ''
+
+        window.location.href = `./texto.html?node=${nodeId}&lat=${finalLat}&lng=${finalLng}`
         } else {
           label.setAttribute('visible', 'true')
         }
